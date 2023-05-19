@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Clone repository
+      uses: actions/checkout@v2
+ 
+
+    - name: Terraform Apply
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: us-east-1
+      run: |
+        terraform init -backend-config="key=tfstate/${REPO_NAME}.tfstate" -backend-config="bucket=terraform-tfstate-prd-2305"
+        terraform plan -var-file=vars/homologation.tfvars
+        terraform apply -var-file=vars/homologation.tfvars -auto-approve
+        terraform apply -destroy -var-file=vars/homologation.tfvars -auto-approve
