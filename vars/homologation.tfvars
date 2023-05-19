@@ -1,4 +1,4 @@
-cluster_identifier = "mongo-prod"
+cluster_identifier = "mongo-homolog"
 instance_count = "3"
 instance_class = "db.t3.medium"
-backup_retention_period = "5"
+backup_retention_period = "7"
